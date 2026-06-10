@@ -1,0 +1,30 @@
+{
+    "name": "dmstr/doctrine-audit-log-bundle",
+    "description": "Audit logging for Doctrine entities via Gedmo Loggable: concrete LogEntry entity exposed as read-only API Platform admin resource.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "diemeisterei GmbH",
+            "homepage": "https://diemeisterei.de"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "symfony/framework-bundle": "^7.0",
+        "api-platform/symfony": "^4.0",
+        "doctrine/orm": "^3.0",
+        "doctrine/doctrine-bundle": "^2.0",
+        "gedmo/doctrine-extensions": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dmstr\\DoctrineAuditLog\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dmstr\\DoctrineAuditLog\\Tests\\": "tests/"
+        }
+    }
+}

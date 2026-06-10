@@ -1,0 +1,23 @@
+# file generated with AI assistance: Claude Code - 2026-06-10 11:00:00 UTC
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # Gedmo Loggable listener — populates ext_log_entries on every
+    # update/insert/remove of an entity annotated with #[Gedmo\Loggable].
+    gedmo.listener.loggable:
+        class: Gedmo\Loggable\LoggableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]
+
+    # Annotation reader needed by Gedmo (Doctrine Common). Used to be
+    # public in the application; we keep it public here to be backward
+    # compatible.
+    annotation_reader:
+        class: Doctrine\Common\Annotations\AnnotationReader
+        public: true
