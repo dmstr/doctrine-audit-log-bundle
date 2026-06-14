@@ -41,7 +41,7 @@ use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
         new GetCollection(),
     ],
     security: "is_granted('ROLE_ADMIN')",
-    openapi: new Operation(tags: ['ZA7 Core'])
+    openapi: new Operation(tags: ['System'])
 )]
 class LogEntry extends AbstractLogEntry
 {
