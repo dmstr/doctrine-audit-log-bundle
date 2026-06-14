@@ -8,6 +8,7 @@ namespace Dmstr\DoctrineAuditLog\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\OpenApi\Model\Operation;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
 
@@ -40,6 +41,7 @@ use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
         new GetCollection(),
     ],
     security: "is_granted('ROLE_ADMIN')",
+    openapi: new Operation(tags: ['System'])
 )]
 class LogEntry extends AbstractLogEntry
 {
