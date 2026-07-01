@@ -1,5 +1,5 @@
 <?php
-// file generated with AI assistance: Claude Code - 2026-06-10 13:00:00 UTC
+// file generated with AI assistance: Claude Code - 2026-07-01 14:30:00 UTC
 
 declare(strict_types=1);
 
@@ -8,6 +8,13 @@ namespace Dmstr\DoctrineAuditLog\Migrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
+/**
+ * Create the ext_log_entries table for Gedmo Loggable.
+ *
+ * Written against the DBAL Schema API (not raw platform SQL) so Doctrine emits
+ * the correct DDL for whatever platform the consuming app runs on — MySQL,
+ * PostgreSQL or SQLite. See MigrationsPortabilityTest.
+ */
 final class Version20260516000001 extends AbstractMigration
 {
     public function getDescription(): string
@@ -17,27 +24,24 @@ final class Version20260516000001 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql(<<<'SQL'
-            CREATE TABLE ext_log_entries (
-                id INT AUTO_INCREMENT NOT NULL,
-                action VARCHAR(8) NOT NULL,
-                logged_at DATETIME NOT NULL,
-                object_id VARCHAR(64) DEFAULT NULL,
-                object_class VARCHAR(191) NOT NULL,
-                version INT NOT NULL,
-                data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:array)',
-                username VARCHAR(191) DEFAULT NULL,
-                INDEX log_class_lookup_idx (object_class),
-                INDEX log_date_lookup_idx (logged_at),
-                INDEX log_user_lookup_idx (username),
-                INDEX log_version_lookup_idx (object_id, object_class, version),
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
+        $table = $schema->createTable('ext_log_entries');
+        $table->addColumn('id', 'integer', ['autoincrement' => true]);
+        $table->addColumn('action', 'string', ['length' => 8]);
+        $table->addColumn('logged_at', 'datetime');
+        $table->addColumn('object_id', 'string', ['length' => 64, 'notnull' => false]);
+        $table->addColumn('object_class', 'string', ['length' => 191]);
+        $table->addColumn('version', 'integer');
+        $table->addColumn('data', 'array', ['notnull' => false]);
+        $table->addColumn('username', 'string', ['length' => 191, 'notnull' => false]);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['object_class'], 'log_class_lookup_idx');
+        $table->addIndex(['logged_at'], 'log_date_lookup_idx');
+        $table->addIndex(['username'], 'log_user_lookup_idx');
+        $table->addIndex(['object_id', 'object_class', 'version'], 'log_version_lookup_idx');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('DROP TABLE ext_log_entries');
+        $schema->dropTable('ext_log_entries');
     }
 }
