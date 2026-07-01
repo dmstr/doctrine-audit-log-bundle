@@ -18,7 +18,10 @@
         "gedmo/doctrine-extensions": "^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^12.0"
+        "phpunit/phpunit": "^12.0",
+        "doctrine/migrations": "^3.9",
+        "doctrine/dbal": "^3.7",
+        "ext-pdo_sqlite": "*"
     },
     "autoload": {
         "psr-4": {
@@ -27,7 +30,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Dmstr\\DoctrineAuditLog\\Tests\\": "tests/"
+            "Dmstr\\DoctrineAuditLog\\Tests\\": "tests/",
+            "Dmstr\\DoctrineAuditLog\\Migrations\\": "migrations/"
         }
     }
 }
