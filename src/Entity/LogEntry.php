@@ -29,7 +29,7 @@ use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
  * - username: user who made the change (if available)
  */
 #[ORM\Entity]
-#[ORM\Table(name: 'ext_log_entries')]
+#[ORM\Table(name: 'dmstr_log_entries')]
 #[ORM\Index(name: 'log_class_lookup_idx', columns: ['object_class'])]
 #[ORM\Index(name: 'log_date_lookup_idx', columns: ['logged_at'])]
 #[ORM\Index(name: 'log_user_lookup_idx', columns: ['username'])]

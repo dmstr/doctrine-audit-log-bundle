@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Dmstr\DoctrineAuditLog\Tests\Migrations;
 
 use Dmstr\DoctrineAuditLog\Migrations\Version20260516000001;
+use Dmstr\DoctrineAuditLog\Migrations\Version20260713120000;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
@@ -44,20 +45,28 @@ final class MigrationsPortabilityTest extends TestCase
             $this->connection->executeStatement($sql);
         }
 
+        // Version20260713120000 — rename to dmstr_log_entries (portable SQL).
+        $vendorPrefix = new Version20260713120000($this->connection, new NullLogger());
+        $vendorPrefix->up($schema);
+        foreach ($vendorPrefix->getSql() as $query) {
+            $this->connection->executeStatement($query->getStatement());
+        }
+
         $sm = $this->connection->createSchemaManager();
-        self::assertTrue($sm->tablesExist(['ext_log_entries']));
+        self::assertTrue($sm->tablesExist(['dmstr_log_entries']), 'renamed table exists');
+        self::assertFalse($sm->tablesExist(['ext_log_entries']), 'old table name is gone');
 
         // SQLite quotes reserved-word identifiers (e.g. "action") in the
         // introspected key, so normalise before comparing.
         $columns = array_map(
             static fn (string $name): string => trim($name, '"'),
-            array_keys($sm->listTableColumns('ext_log_entries'))
+            array_keys($sm->listTableColumns('dmstr_log_entries'))
         );
         foreach (['id', 'action', 'logged_at', 'object_id', 'object_class', 'version', 'data', 'username'] as $column) {
             self::assertContains($column, $columns, sprintf('column %s exists', $column));
         }
 
-        $indexes = array_keys($sm->listTableIndexes('ext_log_entries'));
+        $indexes = array_keys($sm->listTableIndexes('dmstr_log_entries'));
         foreach (['log_class_lookup_idx', 'log_date_lookup_idx', 'log_user_lookup_idx', 'log_version_lookup_idx'] as $index) {
             self::assertContains($index, $indexes, sprintf('index %s exists', $index));
         }

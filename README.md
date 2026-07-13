@@ -8,7 +8,7 @@ API Platform admin resource.
 ## Features (planned)
 
 - Concrete `LogEntry` entity extending `Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry`
-  with table `ext_log_entries`
+  with table `dmstr_log_entries`
 - `LoggableListener` wiring via `doctrine.event_subscriber`
 - `LogEntry` exposed as `#[ApiResource(routePrefix: '/admin', operations: [Get,
   GetCollection], security: "is_granted('ROLE_ADMIN')")]` →

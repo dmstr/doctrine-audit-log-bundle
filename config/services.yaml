@@ -1,4 +1,4 @@
-# file generated with AI assistance: Claude Code - 2026-06-10 11:00:00 UTC
+# file generated with AI assistance: Claude Code - 2026-07-13 12:00:00 UTC
 
 services:
     _defaults:
@@ -6,18 +6,25 @@ services:
         autoconfigure: true
         public: false
 
-    # Gedmo Loggable listener — populates ext_log_entries on every
+    # Gedmo Loggable listener — populates dmstr_log_entries on every
     # update/insert/remove of an entity annotated with #[Gedmo\Loggable].
+    # The bundle subclass defaults logEntryClass to the bundle's LogEntry
+    # entity (Gedmo's own default entity is not mapped in consuming apps).
+    # Tagged per event: Symfony 7 removed support for the former
+    # doctrine.event_subscriber tag (deprecated in 6.3) — with that tag the
+    # listener is silently never registered with the event manager.
     gedmo.listener.loggable:
-        class: Gedmo\Loggable\LoggableListener
+        class: Dmstr\DoctrineAuditLog\EventListener\LoggableListener
         tags:
-            - { name: doctrine.event_subscriber, connection: default }
+            - { name: doctrine.event_listener, event: onFlush, connection: default }
+            - { name: doctrine.event_listener, event: loadClassMetadata, connection: default }
+            - { name: doctrine.event_listener, event: postPersist, connection: default }
         calls:
-            - [ setAnnotationReader, [ '@annotation_reader' ] ]
+            - [ setAnnotationReader, [ '@dmstr_doctrine_audit_log.attribute_reader' ] ]
 
-    # Annotation reader needed by Gedmo (Doctrine Common). Used to be
-    # public in the application; we keep it public here to be backward
-    # compatible.
-    annotation_reader:
-        class: Doctrine\Common\Annotations\AnnotationReader
-        public: true
+    # Gedmo attribute reader — entities declare #[Gedmo\Loggable] as a PHP
+    # attribute. Without an explicit AttributeReader, Gedmo falls back to the
+    # doctrine/annotations reader when that package is installed and silently
+    # ignores attributes (no log entries are written at all).
+    dmstr_doctrine_audit_log.attribute_reader:
+        class: Gedmo\Mapping\Driver\AttributeReader
