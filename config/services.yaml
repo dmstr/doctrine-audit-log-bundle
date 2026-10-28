@@ -6,6 +6,12 @@ services:
         autoconfigure: true
         public: false
 
+    # Announces the permission this bundle checks to the za7-core permission
+    # voter (container tag, plain string; inert without za7-core).
+    Dmstr\DoctrineAuditLog\Security\AuditPermissions:
+        tags:
+            - { name: za7_core.permission, permission: !php/const Dmstr\DoctrineAuditLog\Security\AuditPermissions::READ }
+
     # Gedmo Loggable listener — populates dmstr_log_entries on every
     # update/insert/remove of an entity annotated with #[Gedmo\Loggable].
     # The bundle subclass defaults logEntryClass to the bundle's LogEntry
@@ -28,3 +34,5 @@ services:
     # ignores attributes (no log entries are written at all).
     dmstr_doctrine_audit_log.attribute_reader:
         class: Gedmo\Mapping\Driver\AttributeReader
+
+# - revised 2026-10-28 (permission audit:read)

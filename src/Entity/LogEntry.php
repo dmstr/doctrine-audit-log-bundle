@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\OpenApi\Model\Operation;
+use Dmstr\DoctrineAuditLog\Security\AuditPermissions;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
 
@@ -40,9 +41,11 @@ use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
         new Get(),
         new GetCollection(),
     ],
-    security: "is_granted('ROLE_ADMIN')",
+    security: "is_granted('" . AuditPermissions::READ . "')",
     openapi: new Operation(tags: ['System'])
 )]
 class LogEntry extends AbstractLogEntry
 {
 }
+
+// - revised 2026-10-28 (permission audit:read)
