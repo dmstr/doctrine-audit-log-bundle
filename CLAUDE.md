@@ -25,4 +25,6 @@ via `.github/workflows/tests.yml`.
 
 ## Requirements
 
-PHP >= 8.4.
+PHP >= 8.5.
+
+<!-- - revised 2026-10-28 (PHP 8.5) -->
